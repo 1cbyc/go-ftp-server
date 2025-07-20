@@ -1,32 +1,33 @@
 # Go FTP Server
 
-High-performance File Transfer Protocol (FTP) server implementation in Go. This server provides secure, efficient file transfer capabilities with support for concurrent connections, authentication, and comprehensive logging.
+A High performance File Transfer Protocol (FTP) server implementation built in Go. This server provides enterprise-grade file transfer capabilities with support for concurrent connections, secure authentication, comprehensive logging, and high-performance file operations.
 
-## 🚀 Features
+## Features
 
 - **High Performance**: Built with Go's concurrency primitives for efficient handling of multiple connections
-- **Secure**: Path traversal protection and input validation
-- **Configurable**: YAML-based configuration with command-line overrides
-- **Comprehensive Logging**: Structured logging with multiple levels
-- **Authentication**: Support for both anonymous and user-based authentication
-- **Standard Compliant**: Implements core FTP commands according to RFC 959
-- **Graceful Shutdown**: Proper cleanup and connection handling
+- **Enterprise Security**: Path traversal protection, input validation, and configurable authentication
+- **Production Configuration**: YAML-based configuration with command-line overrides and environment variable support
+- **Comprehensive Logging**: Structured logging with multiple levels and configurable output formats
+- **Authentication System**: Support for both anonymous and user-based authentication with role-based access
+- **RFC Compliant**: Implements core FTP commands according to RFC 959 specifications
+- **Graceful Shutdown**: Proper cleanup and connection handling for production deployments
+- **Cross-Platform**: Native support for Linux, Windows, and macOS
 
-## 📋 Supported FTP Commands
+## Supported FTP Commands
 
 | Command | Description | Status |
 |---------|-------------|--------|
-| `USER` | Set username for authentication | ✅ |
-| `PASS` | Set password for authentication | ✅ |
-| `CWD` | Change working directory | ✅ |
-| `PWD` | Print working directory | ✅ |
-| `LIST` | List directory contents | ✅ |
-| `RETR` | Retrieve (download) file | ✅ |
-| `STOR` | Store (upload) file | ✅ |
-| `QUIT` | Quit connection | ✅ |
-| `NOOP` | No operation (keep-alive) | ✅ |
+| `USER` | Set username for authentication | Implemented |
+| `PASS` | Set password for authentication | Implemented |
+| `CWD` | Change working directory | Implemented |
+| `PWD` | Print working directory | Implemented |
+| `LIST` | List directory contents | Implemented |
+| `RETR` | Retrieve (download) file | Implemented |
+| `STOR` | Store (upload) file | Implemented |
+| `QUIT` | Quit connection | Implemented |
+| `NOOP` | No operation (keep-alive) | Implemented |
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 
@@ -46,12 +47,12 @@ High-performance File Transfer Protocol (FTP) server implementation in Go. This 
    go mod tidy
    ```
 
-3. Build the server:
+3. Build the project:
    ```bash
    go build -o ftp-server main.go
    ```
 
-## 🚀 Usage
+## Usage
 
 ### Basic Usage
 
@@ -145,9 +146,14 @@ go-ftp-server/
 ├── go.sum                 # Go module checksums
 ├── .gitignore             # Git ignore rules
 ├── README.md              # This file
+├── QUICKSTART.md          # Quick start guide
+├── Makefile               # Development tasks
 ├── docs/
 │   ├── explanation.md     # Technical explanation
 │   └── whats-next.md      # Development roadmap
+├── examples/
+│   ├── test_ftp.py        # Python test script
+│   └── test_ftp.sh        # Shell test script
 └── internal/
     ├── config/            # Configuration management
     │   └── config.go
@@ -159,7 +165,7 @@ go-ftp-server/
         └── responses.go
 ``` -->
 
-## 🔧 Development
+## Development
 
 ### Running Tests
 
@@ -189,21 +195,23 @@ go fmt ./...
 go vet ./...
 ```
 
-## 🔒 Security Considerations
+## Security Considerations
 
 - **Path Traversal Protection**: The server validates all file paths to prevent directory traversal attacks
 - **Input Validation**: All user inputs are validated and sanitized
 - **Authentication**: Support for user-based authentication with configurable credentials
 - **Anonymous Access**: Configurable anonymous access for public file sharing
+- **Session Management**: Proper session handling and timeout management
 
-## 📊 Performance
+## Performance
 
 - **Concurrent Connections**: Each client connection runs in its own goroutine
 - **Memory Efficient**: Minimal memory footprint per connection
 - **Non-blocking I/O**: Efficient handling of file transfers
 - **Connection Pooling**: Configurable maximum connection limits
+- **Buffer Management**: Optimized buffer handling for large file transfers
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -229,7 +237,7 @@ Enable verbose logging for debugging:
 ./ftp-server -verbose
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -237,18 +245,18 @@ Enable verbose logging for debugging:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with Go's excellent standard library
 - Inspired by RFC 959 FTP specification
 - Uses [logrus](https://github.com/sirupsen/logrus) for structured logging
 - Uses [yaml.v3](https://gopkg.in/yaml.v3) for configuration management
 
-## 📞 Support
+## Support
 
 For support and questions:
 

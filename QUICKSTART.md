@@ -2,7 +2,7 @@
 
 If you want to get your Go FTP Server up and running in minutes, just read my steps here:
 
-## 🚀 5-Minute Setup
+## 5-Minute Setup
 
 ### 1. Build the Server
 ```bash
@@ -20,7 +20,7 @@ go build -o ftp-server main.go
 - **Username**: `anonymous`
 - **Password**: `anonymous`
 
-## 🧪 Test the Server
+## Test the Server
 
 ### Using the Python Test Script
 ```bash
@@ -46,7 +46,7 @@ curl -u anonymous:anonymous -T test.txt ftp://localhost:2121/hello.txt
 curl -u anonymous:anonymous ftp://localhost:2121/hello.txt -o downloaded.txt
 ```
 
-## 🔧 Common Commands
+## Common Commands
 
 ### Start with verbose logging
 ```bash
@@ -68,7 +68,7 @@ curl -u anonymous:anonymous ftp://localhost:2121/hello.txt -o downloaded.txt
 ./ftp-server -config my-config.yaml
 ```
 
-## 📁 File Structure
+## File Structure
 
 After starting the server, a `ftp_root` directory will be created automatically. This is where your FTP files will be stored.
 
@@ -78,7 +78,7 @@ ftp_root/
 └── (create subdirectories as needed)
 ```
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Server won't start?
 - Check if port 2121 is already in use
@@ -93,14 +93,14 @@ ftp_root/
 - Ensure the server has write access to the current directory
 - Check file permissions in the `ftp_root` directory
 
-## 🎯 Next Steps
+## Next Steps
 
 1. **Read the full documentation**: [README.md](README.md)
 2. **Explore the configuration**: [config.yaml](config.yaml)
 3. **Check the roadmap**: [docs/whats-next.md](docs/whats-next.md)
 4. **Understand the architecture**: [docs/explanation.md](docs/explanation.md)
 
-## 💡 Pro Tips
+## Pro Tips
 
 - Use `-verbose` flag for debugging
 - The server supports concurrent connections

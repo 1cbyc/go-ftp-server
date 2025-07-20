@@ -23,7 +23,6 @@ var (
 func main() {
 	flag.Parse()
 
-	// Setup logging
 	logLevel := logrus.InfoLevel
 	if *verbose {
 		logLevel = logrus.DebugLevel
@@ -33,7 +32,6 @@ func main() {
 		FullTimestamp: true,
 	})
 
-	// Load configuration
 	cfg, err := config.Load(*configFile)
 	if err != nil {
 		logrus.Warnf("Failed to load config file %s: %v, using defaults", *configFile, err)
@@ -48,7 +46,6 @@ func main() {
 		}
 	}
 
-	// Override config with command line flags if provided
 	if *host != "localhost" {
 		cfg.Server.Host = *host
 	}
@@ -59,10 +56,8 @@ func main() {
 		cfg.FTP.RootDir = *rootDir
 	}
 
-	// Create and start server
 	srv := server.NewFTPServer(cfg)
 
-	// Setup graceful shutdown
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 
@@ -72,7 +67,6 @@ func main() {
 		srv.Shutdown()
 	}()
 
-	// Start the server
 	logrus.Infof("Starting FTP server on %s:%d", cfg.Server.Host, cfg.Server.Port)
 	logrus.Infof("Root directory: %s", cfg.FTP.RootDir)
 

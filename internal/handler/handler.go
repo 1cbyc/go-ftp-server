@@ -14,30 +14,25 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// FTPHandler handles FTP client connections and commands
 type FTPHandler struct {
 	config *config.Config
 	mu     sync.RWMutex
 }
 
-// NewFTPHandler creates a new FTP handler
 func NewFTPHandler(cfg *config.Config) *FTPHandler {
 	return &FTPHandler{
 		config: cfg,
 	}
 }
 
-// HandleConnection handles a single client connection
 func (h *FTPHandler) HandleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
 
-	// Send welcome message
 	h.sendResponse(writer, ftp.ResponseWelcome)
 
-	// Create session for this connection
 	session := &FTPSession{
 		conn:          conn,
 		reader:        reader,
@@ -48,7 +43,6 @@ func (h *FTPHandler) HandleConnection(conn net.Conn) {
 		authenticated: false,
 	}
 
-	// Process commands
 	for {
 		message, err := reader.ReadString('\n')
 		if err != nil {
@@ -66,7 +60,6 @@ func (h *FTPHandler) HandleConnection(conn net.Conn) {
 	}
 }
 
-// processCommand processes a single FTP command
 func (h *FTPHandler) processCommand(session *FTPSession, message string) {
 	parts := strings.SplitN(message, " ", 2)
 	command := strings.ToUpper(parts[0])
@@ -99,13 +92,11 @@ func (h *FTPHandler) processCommand(session *FTPSession, message string) {
 	}
 }
 
-// handleUser handles the USER command
 func (h *FTPHandler) handleUser(session *FTPSession, username string) {
 	session.username = username
 	h.sendResponse(session.writer, ftp.ResponseUsernameOK)
 }
 
-// handlePass handles the PASS command
 func (h *FTPHandler) handlePass(session *FTPSession, password string) {
 	if h.authenticate(session.username, password) {
 		session.authenticated = true
@@ -115,7 +106,6 @@ func (h *FTPHandler) handlePass(session *FTPSession, password string) {
 	}
 }
 
-// handleCwd handles the CWD command
 func (h *FTPHandler) handleCwd(session *FTPSession, dir string) {
 	if !session.authenticated {
 		h.sendResponse(session.writer, ftp.ResponseNotLoggedIn)
@@ -137,7 +127,6 @@ func (h *FTPHandler) handleCwd(session *FTPSession, dir string) {
 	h.sendResponse(session.writer, ftp.ResponseDirectoryChanged)
 }
 
-// handlePwd handles the PWD command
 func (h *FTPHandler) handlePwd(session *FTPSession) {
 	if !session.authenticated {
 		h.sendResponse(session.writer, ftp.ResponseNotLoggedIn)
@@ -148,7 +137,6 @@ func (h *FTPHandler) handlePwd(session *FTPSession) {
 	h.sendResponse(session.writer, response)
 }
 
-// handleList handles the LIST command
 func (h *FTPHandler) handleList(session *FTPSession, path string) {
 	if !session.authenticated {
 		h.sendResponse(session.writer, ftp.ResponseNotLoggedIn)
@@ -185,7 +173,6 @@ func (h *FTPHandler) handleList(session *FTPSession, path string) {
 	h.sendResponse(session.writer, ftp.ResponseTransferComplete)
 }
 
-// handleRetr handles the RETR command
 func (h *FTPHandler) handleRetr(session *FTPSession, filename string) {
 	if !session.authenticated {
 		h.sendResponse(session.writer, ftp.ResponseNotLoggedIn)
@@ -207,7 +194,6 @@ func (h *FTPHandler) handleRetr(session *FTPSession, filename string) {
 
 	h.sendResponse(session.writer, ftp.ResponseDataConnection)
 
-	// Simple file transfer - in a real implementation, you'd use a data connection
 	buffer := make([]byte, 1024)
 	for {
 		n, err := file.Read(buffer)
@@ -221,7 +207,6 @@ func (h *FTPHandler) handleRetr(session *FTPSession, filename string) {
 	h.sendResponse(session.writer, ftp.ResponseTransferComplete)
 }
 
-// handleStor handles the STOR command
 func (h *FTPHandler) handleStor(session *FTPSession, filename string) {
 	if !session.authenticated {
 		h.sendResponse(session.writer, ftp.ResponseNotLoggedIn)
@@ -243,7 +228,6 @@ func (h *FTPHandler) handleStor(session *FTPSession, filename string) {
 
 	h.sendResponse(session.writer, ftp.ResponseDataConnection)
 
-	// Simple file receive - in a real implementation, you'd use a data connection
 	buffer := make([]byte, 1024)
 	for {
 		n, err := session.reader.Read(buffer)
@@ -256,18 +240,15 @@ func (h *FTPHandler) handleStor(session *FTPSession, filename string) {
 	h.sendResponse(session.writer, ftp.ResponseTransferComplete)
 }
 
-// handleQuit handles the QUIT command
 func (h *FTPHandler) handleQuit(session *FTPSession) {
 	h.sendResponse(session.writer, ftp.ResponseGoodbye)
 	session.conn.Close()
 }
 
-// handleNoop handles the NOOP command
 func (h *FTPHandler) handleNoop(session *FTPSession) {
 	h.sendResponse(session.writer, ftp.ResponseOK)
 }
 
-// authenticate validates user credentials
 func (h *FTPHandler) authenticate(username, password string) bool {
 	if h.config.Auth.Anonymous && username == "anonymous" {
 		return true
@@ -280,7 +261,6 @@ func (h *FTPHandler) authenticate(username, password string) bool {
 	return false
 }
 
-// isValidPath checks if a path is valid and within the root directory
 func (h *FTPHandler) isValidPath(path, rootDir string) bool {
 	absPath, err := filepath.Abs(path)
 	if err != nil {
@@ -295,14 +275,12 @@ func (h *FTPHandler) isValidPath(path, rootDir string) bool {
 	return strings.HasPrefix(absPath, absRoot)
 }
 
-// sendResponse sends a response to the client
 func (h *FTPHandler) sendResponse(writer *bufio.Writer, response string) {
 	writer.WriteString(response + "\r\n")
 	writer.Flush()
 	logrus.Debugf("Sent response: %s", response)
 }
 
-// FTPSession represents a client session
 type FTPSession struct {
 	conn          net.Conn
 	reader        *bufio.Reader
