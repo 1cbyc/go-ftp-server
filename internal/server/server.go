@@ -1,9 +1,9 @@
-
 package server
 
 import (
 	"fmt"
 	"net"
+	"os"
 	"sync"
 
 	"github.com/mrinalxdev/go-ftp-server/internal/config"
@@ -94,7 +94,10 @@ func (s *FTPServer) handleConnection(conn net.Conn) {
 
 // ensureRootDir creates the root directory if it doesn't exist
 func (s *FTPServer) ensureRootDir() error {
-	// This will be implemented when we add the file system utilities
+	if err := os.MkdirAll(s.config.FTP.RootDir, 0755); err != nil {
+		return fmt.Errorf("failed to create root directory %s: %w", s.config.FTP.RootDir, err)
+	}
+	logrus.Infof("Root directory ready: %s", s.config.FTP.RootDir)
 	return nil
 }
 
