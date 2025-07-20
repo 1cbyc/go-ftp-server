@@ -1,0 +1,18 @@
+server:
+  host: "localhost"
+  port: 2121
+
+ftp:
+  root_dir: "./ftp_root"
+  max_connections: 100
+  timeout: 300
+
+auth:
+  anonymous: true
+  users:
+    anonymous: "anonymous"
+    admin: "admin123"
+
+log:
+  level: "info"
+  format: "text" 
